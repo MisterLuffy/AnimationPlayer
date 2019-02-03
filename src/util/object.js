@@ -38,13 +38,15 @@ function copy(object, deep) {
     return result;
 }
 
-function extend(target, source) {
-    each(
-        source,
-        function (value, key) {
-            target[key] = value;
-        }
-    );
+function extend(target, ...sources) {
+    for (let source of sources) {
+        each(
+            source,
+            function (value, key) {
+                target[key] = value;
+            }
+        );
+    }
 
     return target;
 }

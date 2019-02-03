@@ -4,11 +4,6 @@
 import Shape from "../Shape";
 import object from '../util/object';
 
-// 更高效的取整
-function floor(num) {
-    return (0.5 + num) | 0;
-}
-
 export default class Bitmap extends Shape {
     /**
      * @param {Object} options
@@ -42,21 +37,31 @@ export default class Bitmap extends Shape {
         );
     }
 
+    /**
+     * 创建图形
+     * @override
+     * @param ctx Canvas2D上下文
+     */
     createShape (ctx) {
         const me = this;
+        const isCache = ctx === me.cacheCtx;
+
         ctx.drawImage(
             me.image,
             me.sx,
             me.sy,
             me.sWidth,
             me.sHeight,
-            0,
-            0,
+            isCache ? 0 : me.x,
+            isCache ? 0 : me.y,
             me.width,
             me.height
         );
     }
 
+    /**
+     * 更新图形
+     */
     update () {
         const me = this;
         const baseTime = 20;
@@ -65,8 +70,8 @@ export default class Bitmap extends Shape {
         me.time = me.time || baseTime;
         const delta = me.time * 0.2;
         // 模拟自由落体的变化
-        let x = floor(me.x - delta);
-        let y = floor(me.y + delta);
+        let x = Math.floor(me.x - delta);
+        let y = Math.floor(me.y + delta);
 
         // 边界检测
         if (x + me.width < 0) {
@@ -75,7 +80,7 @@ export default class Bitmap extends Shape {
 
         if (y > me.wraperHeight) {
             me.time = baseTime;
-            x = floor(Math.random() * me.wraperWidth);
+            x = Math.floor(Math.random() * me.wraperWidth);
             y = -me.height;
         }
 

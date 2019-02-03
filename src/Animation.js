@@ -2,6 +2,8 @@
  * @file canvas动画类
  */
 import Shape from './Shape';
+
+import Arc from './shapes/Arc';
 import Bitmap from './shapes/Bitmap';
 
 const requestAnimationFrame = window.requestAnimationFrame;
@@ -33,6 +35,9 @@ export default class {
         );
     }
 
+    /**
+     * 刷新当前帧
+     */
     refresh () {
         const me = this;
 
@@ -49,6 +54,9 @@ export default class {
         );
     }
 
+    /**
+     * 动画开始
+     */
     start () {
         const me = this;
 
@@ -57,6 +65,9 @@ export default class {
         );
     }
 
+    /**
+     * 动画结束
+     */
     stop () {
         const me = this;
 
@@ -74,4 +85,5 @@ export default class {
     }
 };
 
+Shape.shapes.arc = Arc;
 Shape.shapes.bitmap = Bitmap;

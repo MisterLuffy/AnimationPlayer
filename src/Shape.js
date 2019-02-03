@@ -32,11 +32,7 @@ export default class Shape {
                 x: 0,
                 y: 0,
                 time: 0
-            }
-        );
-
-        object.extend(
-            me,
+            },
             options
         );
 
@@ -46,6 +42,7 @@ export default class Shape {
 
         // 需要使用缓存
         if (me.cache !== false) {
+            me.cache = true;
             me.cacheCanvas = document.createElement('canvas');
             me.cacheCtx = me.cacheCanvas.getContext('2d');
             me.cacheCanvas.width = me.width || me.wraperWidth;
@@ -57,12 +54,19 @@ export default class Shape {
         }
     }
 
-    // 依赖子类重载
+    /**
+     * 初始化图形，依赖子类实现
+     */
     createShape () {}
 
-    // 依赖子类重载
+    /**
+     * 更新图形，依赖子类实现
+     */
     update () {}
 
+    /**
+     * 绘图
+     */
     draw () {
         const me = this;
 
