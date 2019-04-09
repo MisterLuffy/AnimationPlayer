@@ -6,7 +6,7 @@ export default {
     input: 'src/Animation.js',
     output: {
         file: 'dist/animation.js',
-        name: 'Animation',
+        name: 'AnimationPlayer',
         format: 'umd'
     },
     plugins: [

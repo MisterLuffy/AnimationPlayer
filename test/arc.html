@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Animation Player</title>
+    <title>Animation Arc</title>
     <style>
         html,
         body {
@@ -41,7 +41,7 @@
 
         window.onload = function () {
             var canvas = document.querySelector('canvas');
-            var animation = new Animation(canvas, ['click']);
+            var animation = new AnimationPlayer(canvas, ['click']);
 
             window.animation = animation;
 

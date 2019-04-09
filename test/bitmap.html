@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Animation Player</title>
+    <title>Animation Image</title>
     <style>
         html,
         body {
@@ -30,7 +30,7 @@
     <script>
         window.onload = function () {
             var canvas = document.querySelector('canvas');
-            var animation = new Animation(canvas, ['click']);
+            var animation = new AnimationPlayer(canvas, ['click']);
             var image = new Image();
 
             window.animation = animation;
