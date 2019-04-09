@@ -5,17 +5,10 @@
  * 当实例极多时会创建过多离屏canvas，性能反而下降
  * 同时离屏canvas的尺寸canvas要尽可能小，否则亦会影响性能
  */
-import object from './util/object';
+import object from '../util/object';
+import number from "../util/number";
 
 export default class Shape {
-    /**
-     * @param {Object} options
-     * @property {Object} options.canvas DOM元素
-     * @property {?number} options.width 图形的宽，默认为canvas宽
-     * @property {?number} options.height 图形的高，默认为canvas高
-     * @property {?number} options.x 图形绘制起点，默认0
-     * @property {?number} options.y 图形绘制起点，默认0
-     */
     constructor (options) {
         if (!options.canvas) {
             throw {
@@ -52,6 +45,13 @@ export default class Shape {
             me.createShape(me.cacheCtx);
             me.cacheCtx.restore();
         }
+
+        me.id = '' + number.randomInt(10e6, 10e7 - 1, 1);
+        // 帧数，update时使用
+        me.frame = 0;
+
+        Shape.instances[me.namespace] = Shape.instances[me.namespace] || {};
+        Shape.instances[me.namespace][me.id] = me;
     }
 
     /**
@@ -79,6 +79,21 @@ export default class Shape {
             me.ctx.drawImage(me.cacheCanvas, me.x, me.y);
         }
     }
+
+    freeze () {
+        this._update = this.update;
+        this.update = function () {};
+        this.isFrozen = true;
+    }
+
+    unFreeze () {
+        this.update = this._update;
+        this.isFrozen = false;
+    }
+
+    dispose () {
+        delete Shape.instances[this.namespace][this.id];
+    }
 };
 
 /**
@@ -87,9 +102,14 @@ export default class Shape {
 Shape.shapes = {};
 
 /**
+ * 存储实例
+ */
+Shape.instances = {};
+
+/**
  * 静态工厂方法
  * @param {string} shape 需要创建的图形子类的名字
- * @param {options} options 具体参数在子类里描述
+ * @param {Object} options 具体参数在子类里描述
  */
 Shape.factory = function (shape, options) {
     if (Shape.shapes[shape]) {

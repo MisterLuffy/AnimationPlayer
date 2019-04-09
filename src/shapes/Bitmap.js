@@ -1,22 +1,30 @@
 /**
  * @file 位图子类
  */
-import Shape from "../Shape";
+import Shape from "./Shape";
 import object from '../util/object';
 
 export default class Bitmap extends Shape {
     /**
      * @param {Object} options
-     * @property {Object} options.canvas
-     * @property {Object} options.image 需要被绘制的图片元素
+     *
+     * @property {HTMLElement} options.canvas
+     * @property {Image} options.image 需要被绘制的图片元素
+     *
      * @property {?number} options.sx
      * @property {?number} options.sy
      * @property {?number} options.sWidth
      * @property {?number} options.sHeight
+     *
      * @property {?number} options.x
      * @property {?number} options.y
      * @property {?number} options.width
      * @property {?number} options.height
+     *
+     * @property {?boolean} options.cache 是否使用缓存
+     * @property {string} options.namespace 存储使用的命名空间
+     * @property {?Function} options.onUpdate 自定义图形的更新函数
+     * @property {?Function} options.onClick 图形点击回调
      */
     constructor (options) {
         const image = options.image;
@@ -64,28 +72,32 @@ export default class Bitmap extends Shape {
      */
     update () {
         const me = this;
-        const baseTime = 20;
 
-        // 保证有一个初始的速度
-        me.time = me.time || baseTime;
-        const delta = me.time * 0.2;
-        // 模拟自由落体的变化
-        let x = Math.floor(me.x - delta);
-        let y = Math.floor(me.y + delta);
+        me.frame++;
 
-        // 边界检测
-        if (x + me.width < 0) {
-            x = me.wraperWidth;
+        // 外层自定义的更新可以覆盖默认方式
+        if (typeof me.onUpdate !== 'function' || me.onUpdate() !== false) {
+            const baseFrame = 10;
+            me.frame = me.frame >= baseFrame ? me.frame : baseFrame;
+
+            // 模拟自由落体的变化
+            const delta = me.frame * 0.1;
+            let x = Math.floor(me.x - delta);
+            let y = Math.floor(me.y + delta);
+
+            // 边界检测
+            if (x + me.width < 0) {
+                x = me.wraperWidth;
+            }
+
+            if (y > me.wraperHeight) {
+                me.frame = baseFrame;
+                x = Math.floor(Math.random() * me.wraperWidth);
+                y = -me.height;
+            }
+
+            me.x = x;
+            me.y = y;
         }
-
-        if (y > me.wraperHeight) {
-            me.time = baseTime;
-            x = Math.floor(Math.random() * me.wraperWidth);
-            y = -me.height;
-        }
-
-        me.x = x;
-        me.y = y;
-        me.time++;
     }
 };

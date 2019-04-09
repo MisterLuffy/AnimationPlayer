@@ -5,6 +5,7 @@
 import array from './array';
 
 function each(object, callback) {
+    object = object || {};
     array.each(
         Object.keys(object),
         function (key) {

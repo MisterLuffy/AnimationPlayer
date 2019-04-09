@@ -1,7 +1,7 @@
 /**
  * @file 圆弧
  */
-import Shape from '../Shape';
+import Shape from './Shape';
 
 import number from '../util/number';
 import object from '../util/object';
@@ -9,6 +9,9 @@ import object from '../util/object';
 export default class Arc extends Shape {
     /**
      * @param options
+     *
+     * @property {HTMLElement} options.canvas
+     * @property {Image} options.image 需要被绘制的图片元素
      *
      * @property options.x
      * @property options.y
@@ -21,6 +24,11 @@ export default class Arc extends Shape {
      * @property options.fillColor
      * @property options.vx
      * @property options.vy
+     *
+     * @property {?boolean} options.cache 是否使用缓存
+     * @property {string} options.namespace 存储使用的命名空间
+     * @property {?Function} options.onUpdate 自定义图形的更新函数
+     * @property {?Function} options.onClick 图形点击回调
      */
     constructor (options) {
         let radius = options.radius || 10;
@@ -80,30 +88,33 @@ export default class Arc extends Shape {
     update () {
         const me = this;
 
-        if (me.vx) {
-            me.x += me.vx;
+        // 外层自定义的更新可以覆盖默认方式
+        if (typeof me.onUpdate !== 'function' || me.onUpdate() !== false) {
+            if (me.vx) {
+                me.x += me.vx;
+            }
+
+            if (me.cache && (me.x < 0 || me.x + me.width > me.wraperWidth)
+                || !me.cache && (me.x - me.radius < 0 || me.x + me.radius > me.wraperWidth)
+            ) {
+                me.vx = -me.vx;
+                me.x += me.vx;
+            }
+
+            if (me.vy) {
+                me.y += me.vy;
+            }
+
+            if (me.cache && (me.y < 0 || me.y + me.height > me.wraperHeight)
+                || !me.cache && (me.y - me.radius < 0 || me.y + me.radius > me.wraperHeight)
+            ) {
+                me.vy = -me.vy;
+                me.y += me.vy;
+            }
+
+
+            me.x = number.limitRange(me.x, me.cache ? 0 : me.radius, me.wraperWidth - (me.cache ? 2 : 1) * me.radius);
+            me.y = number.limitRange(me.y, me.cache ? 0 : me.radius, me.wraperHeight - (me.cache ? 2 : 1) * me.radius);
         }
-
-        if (me.cache && (me.x < 0 || me.x + me.width > me.wraperWidth)
-            || !me.cache && (me.x - me.radius < 0 || me.x + me.radius > me.wraperWidth)
-        ) {
-            me.vx = -me.vx;
-            me.x += me.vx;
-        }
-
-        if (me.vy) {
-            me.y += me.vy;
-        }
-
-        if (me.cache && (me.y < 0 || me.y + me.height > me.wraperHeight)
-            || !me.cache && (me.y - me.radius < 0 || me.y + me.radius > me.wraperHeight)
-        ) {
-            me.vy = -me.vy;
-            me.y += me.vy;
-        }
-
-
-        me.x = number.limitRange(me.x, me.cache ? 0 : me.radius, me.wraperWidth - (me.cache ? 2 : 1) * me.radius);
-        me.y = number.limitRange(me.y, me.cache ? 0 : me.radius, me.wraperHeight - (me.cache ? 2 : 1) * me.radius);
     }
 }
