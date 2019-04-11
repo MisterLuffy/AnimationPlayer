@@ -7,7 +7,6 @@ import Bitmap from './shapes/Bitmap';
 
 import number from './util/number';
 import object from './util/object';
-import array from "./util/array";
 import contain from "./util/contain";
 import eventHandler from './eventHandler';
 

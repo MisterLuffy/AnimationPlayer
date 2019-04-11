@@ -5,7 +5,7 @@ import { terser } from 'rollup-plugin-terser';
 export default {
     input: 'src/Animation.js',
     output: {
-        file: 'dist/animation.js',
+        file: 'dist/animationPlayer.js',
         name: 'AnimationPlayer',
         format: 'umd'
     },

@@ -26,7 +26,7 @@
 </head>
 <body>
     <canvas id="canvas" width="960" height="480" style="background-color: #fff;"></canvas>
-    <script src="../dist/animation.js"></script>
+    <script src="../dist/animationPlayer.js"></script>
     <script>
         window.onload = function () {
             var canvas = document.querySelector('canvas');
@@ -52,27 +52,20 @@
                                 width: width,
                                 height: height,
                                 onUpdate: function () {
-                                    const me = this;
-                                    const baseFrame = 100;
+                                    var me = this;
+                                    var baseFrame = 100;
                                     me.frame = me.frame >= baseFrame ? me.frame : baseFrame;
 
                                     // 模拟自由落体的变化
-                                    const delta = me.frame * 0.1;
-                                    let x = Math.floor(me.x + delta * 0);
-                                    let y = Math.floor(me.y + delta);
-
-                                    // 边界检测
-                                    if (x + me.width < 0) {
-                                        x = me.wraperWidth;
-                                    }
+                                    var delta = me.frame * 0.1;
+                                    var y = Math.floor(me.y + delta);
 
                                     if (y > me.wraperHeight) {
                                         me.frame = baseFrame;
-                                        x = Math.floor(Math.random() * me.wraperWidth);
+                                        me.x = Math.floor(Math.random() * me.wraperWidth);
                                         y = -me.height;
                                     }
 
-                                    me.x = x;
                                     me.y = y;
 
                                     // 阻止后续
